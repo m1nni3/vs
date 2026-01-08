@@ -500,8 +500,6 @@
             // Remove trailing &
             pfOutput = pfOutput.slice(0, -1);
             
-            // Add passphrase
-            pfOutput += '&passphrase=' + encodeURIComponent(PASSPHRASE.trim()).replace(/%20/g, '+');
             
             // Generate MD5 hash (lowercase)
             const signature = CryptoJS.MD5(pfOutput).toString().toLowerCase();
