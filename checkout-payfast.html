@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout - VettedStay</title>
+    <style>
+        :root {
+            --primary: #00d4aa;
+            --secondary: #1a365d;
+            --accent: #f8fafc;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --success: #48bb78;
+            --error: #f56565;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--accent);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .checkout-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .package-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .package-card {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .package-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 170, 0.15);
+        }
+
+        .package-card.selected {
+            border-color: var(--primary);
+            background: rgba(0, 212, 170, 0.05);
+        }
+
+        .package-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .package-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .package-features li {
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .package-features li:before {
+            content: "✓";
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+
+        .order-summary {
+            background: var(--accent);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-total {
+            border-top: 1px solid var(--border);
+            padding-top: 0.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #00b894;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-top: 0.25rem;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .checkout-card {
+                padding: 1rem;
+            }
+
+            .package-selection {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="checkout-card">
+            <h1>🔒 Secure Checkout</h1>
+            <p class="subtitle">Complete your tenant screening order</p>
+
+            <form id="checkoutForm" action="https://www.payfast.co.za/eng/process" method="post">
+                <!-- PayFast Required Fields -->
+                <input type="hidden" name="merchant_id" value="10000100">
+                <input type="hidden" name="merchant_key" value="46f0cd694581a">
+                <input type="hidden" name="return_url" value="https://vetstay.click/payment-success.html">
+                <input type="hidden" name="cancel_url" value="https://vetstay.click/payment-cancelled.html">
+                <input type="hidden" name="notify_url" value="https://vetstay.click/payment-notify.php">
+                <input type="hidden" name="amount" id="amount" value="">
+                <input type="hidden" name="item_name" id="item_name" value="">
+                <input type="hidden" name="item_description" id="item_description" value="">
+                <input type="hidden" name="custom_str1" id="custom_str1" value="">
+                <input type="hidden" name="custom_str2" id="custom_str2" value="">
+                <input type="hidden" name="custom_str3" id="custom_str3" value="">
+                <input type="hidden" name="custom_str4" id="custom_str4" value="">
+                <input type="hidden" name="custom_str5" id="custom_str5" value="">
+                <input type="hidden" name="signature" id="signature" value="">
+
+                <div class="form-section">
+                    <h2>1. Select Package</h2>
+                    <div class="package-selection" id="packageSelection">
+                        <div class="package-card" data-package="quick" data-price="99" data-name="QuickCheck" data-desc="Basic tenant screening">
+                            <div class="package-name">QuickCheck</div>
+                            <div class="package-price">R99</div>
+                            <ul class="package-features">
+                                <li>ID verification</li>
+                                <li>Criminal record check</li>
+                                <li>24-hour turnaround</li>
+                            </ul>
+                        </div>
+                        <div class="package-card" data-package="standard" data-price="249" data-name="SmartScreen" data-desc="Comprehensive screening">
+                            <div class="package-name">SmartScreen</div>
+                            <div class="package-price">R249</div>
+                            <ul class="package-features">
+                                <li>All QuickCheck features</li>
+                                <li>Credit check</li>
+                                <li>Employment verification</li>
+                                <li>48-hour turnaround</li>
+                            </ul>
+                        </div>
+                        <div class="package-card" data-package="premium" data-price="499" data-name="SecureLease" data-desc="Complete background check">
+                            <div class="package-name">SecureLease</div>
+                            <div class="package-price">R499</div>
+                            <ul class="package-features">
+                                <li>All SmartScreen features</li>
+                                <li>Reference checks</li>
+                                <li>Financial assessment</li>
+                                <li>Express 12-hour service</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>2. Your Information</h2>
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name_first" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email_address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="custom_str2" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>3. Tenant Details</h2>
+                    <div class="form-group">
+                        <label for="tenant_name">Tenant Full Name *</label>
+                        <input type="text" id="tenant_name" name="custom_str3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenant_id">Tenant ID Number *</label>
+                        <input type="text" id="tenant_id" name="custom_str4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="property_ref">Property Reference (Optional)</label>
+                        <input type="text" id="property_ref" name="custom_str5">
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="consent" required>
+                            <label for="consent">I have obtained consent from the tenant to conduct this screening in accordance with POPIA regulations *</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span id="selectedPackage">No package selected</span>
+                        <span id="packagePrice">R0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Processing Fee</span>
+                        <span>R15</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span id="totalPrice">R15</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                    Proceed to Payment →
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let selectedPackage = null;
+
+        // Package selection
+        document.querySelectorAll('.package-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selected class from all cards
+                document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+                
+                // Add selected class to clicked card
+                this.classList.add('selected');
+                
+                // Update selected package
+                selectedPackage = {
+                    id: this.dataset.package,
+                    price: parseInt(this.dataset.price),
+                    name: this.dataset.name,
+                    desc: this.dataset.desc
+                };
+                
+                updateOrderSummary();
+                updateFormFields();
+                validateForm();
+            });
+        });
+
+        function updateOrderSummary() {
+            if (selectedPackage) {
+                document.getElementById('selectedPackage').textContent = selectedPackage.name;
+                document.getElementById('packagePrice').textContent = `R${selectedPackage.price}`;
+                document.getElementById('totalPrice').textContent = `R${selectedPackage.price + 15}`;
+            }
+        }
+
+        function updateFormFields() {
+            if (selectedPackage) {
+                document.getElementById('amount').value = (selectedPackage.price + 15).toFixed(2);
+                document.getElementById('item_name').value = selectedPackage.name;
+                document.getElementById('item_description').value = selectedPackage.desc;
+                
+                // Generate order ID
+                const orderId = `VS${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+                document.getElementById('custom_str1').value = orderId;
+                
+                // Generate signature
+                generateSignature();
+            }
+        }
+
+        function generateSignature() {
+            const passphrase = 'jt7NOE43FZPn'; // Sandbox passphrase
+            const data = {
+                merchant_id: '10000100',
+                merchant_key: '46f0cd694581a',
+                return_url: 'https://vetstay.click/payment-success.html',
+                cancel_url: 'https://vetstay.click/payment-cancelled.html',
+                notify_url: 'https://vetstay.click/payment-notify.php',
+                amount: document.getElementById('amount').value,
+                item_name: document.getElementById('item_name').value,
+                item_description: document.getElementById('item_description').value,
+                custom_str1: document.getElementById('custom_str1').value,
+                custom_str2: document.getElementById('custom_str2').value,
+                custom_str3: document.getElementById('custom_str3').value,
+                custom_str4: document.getElementById('custom_str4').value,
+                custom_str5: document.getElementById('custom_str5').value
+            };
+            
+            let pfOutput = '';
+            for (const [key, val] of Object.entries(data)) {
+                if (val !== '') {
+                    pfOutput += key + '=' + encodeURIComponent(val.trim()) + '&';
+                }
+            }
+            pfOutput = pfOutput.slice(0, -1);
+            if (passphrase !== null) {
+                pfOutput += '&passphrase=' + encodeURIComponent(passphrase.trim());
+            }
+            
+            const signature = CryptoJS.MD5(pfOutput).toString();
+            document.getElementById('signature').value = signature;
+        }
+
+        function validateForm() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const tenantName = document.getElementById('tenant_name').value.trim();
+            const tenantId = document.getElementById('tenant_id').value.trim();
+            const consent = document.getElementById('consent').checked;
+            
+            const isValid = selectedPackage && name && email && phone && tenantName && tenantId && consent;
+            document.getElementById('submitBtn').disabled = !isValid;
+        }
+
+        // Form validation on input
+        document.querySelectorAll('input, select').forEach(field => {
+            field.addEventListener('input', validateForm);
+        });
+
+        // Pre-select package from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const itemParam = urlParams.get('item');
+        if (itemParam) {
+            const packageCard = document.querySelector(`[data-package="${itemParam}"]`);
+            if (packageCard) {
+                packageCard.click();
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</body>
+</html></content>
+<parameter name="filePath">/workspaces/vs/checkout-payfast.html

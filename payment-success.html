@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - VettedStay</title>
+    <style>
+        :root {
+            --primary: #00d4aa;
+            --secondary: #1a365d;
+            --accent: #f8fafc;
+            --text: #2d3748;
+            --text-light: #718096;
+            --success: #48bb78;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--accent);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin: 0 auto 1.5rem;
+        }
+
+        h1 {
+            color: var(--success);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .order-details {
+            background: var(--accent);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .next-steps {
+            margin: 2rem 0;
+        }
+
+        .next-steps h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .steps {
+            text-align: left;
+            background: var(--accent);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #00b894;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 2rem 1rem;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✓</div>
+        <h1>Payment Successful!</h1>
+        <p class="subtitle">Thank you for your order. Your tenant screening is now being processed.</p>
+
+        <div class="order-details">
+            <h3>Order Details</h3>
+            <div class="detail-row">
+                <span>Order ID:</span>
+                <span id="orderId">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span>Package:</span>
+                <span id="package">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span>Amount Paid:</span>
+                <span id="amount">Loading...</span>
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h3>What's Next?</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">1</div>
+                    <div>
+                        <strong>Email Confirmation</strong><br>
+                        <small>You'll receive an email confirmation with your order details and next steps.</small>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-icon">2</div>
+                    <div>
+                        <strong>Screening Process</strong><br>
+                        <small>Our team will begin the tenant screening process immediately.</small>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-icon">3</div>
+                    <div>
+                        <strong>Report Delivery</strong><br>
+                        <small>You'll receive the completed report via email within the promised timeframe.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a href="https://vetstay.click/index.html" class="btn btn-primary">Return to Home</a>
+            <a href="https://vetstay.click/contact.html" class="btn btn-secondary">Contact Support</a>
+        </div>
+    </div>
+
+    <script>
+        // Get PayFast return parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Extract order details from URL parameters
+        const orderId = urlParams.get('custom_str1') || 'N/A';
+        const packageName = urlParams.get('item_name') || 'N/A';
+        const amount = urlParams.get('amount') ? `R${urlParams.get('amount')}` : 'N/A';
+
+        // Update the page with order details
+        document.getElementById('orderId').textContent = orderId;
+        document.getElementById('package').textContent = packageName;
+        document.getElementById('amount').textContent = amount;
+
+        // Optional: Send confirmation to server
+        if (orderId !== 'N/A') {
+            // Could send a request to your server to mark order as confirmed
+            console.log('Order confirmed:', orderId);
+        }
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">/workspaces/vs/payment-success.html

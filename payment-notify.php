@@ -12,7 +12,7 @@ header('HTTP/1.0 200 OK');
 flush();
 
 // Configuration
-define('SANDBOX_MODE', true); // Set to false for production
+define('SANDBOX_MODE', false); // Set to false for production
 $pfHost = SANDBOX_MODE ? 'sandbox.payfast.co.za' : 'www.payfast.co.za';
 $pfPassphrase = 'jt7NOE43FZPn'; // Your passphrase - keep secure!
 

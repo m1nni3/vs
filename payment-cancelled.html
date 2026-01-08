@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled - VettedStay</title>
+    <style>
+        :root {
+            --primary: #00d4aa;
+            --secondary: #1a365d;
+            --accent: #f8fafc;
+            --text: #2d3748;
+            --text-light: #718096;
+            --warning: #ed8936;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--accent);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .cancel-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--warning);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin: 0 auto 1.5rem;
+        }
+
+        h1 {
+            color: var(--warning);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .message {
+            background: var(--accent);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .message h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .message p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .help-info {
+            background: #fef5e7;
+            border: 1px solid #f6ad55;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .help-info h4 {
+            color: #c05621;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #00b894;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .contact-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .contact-info p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cancel-icon">⚠</div>
+        <h1>Payment Cancelled</h1>
+        <p class="subtitle">Your payment was not completed. No charges have been made to your account.</p>
+
+        <div class="message">
+            <h3>What happened?</h3>
+            <p>You cancelled the payment process before completion. This could happen for several reasons:</p>
+            <ul style="margin-left: 1.5rem;">
+                <li>You clicked the "Cancel" or "Back" button during payment</li>
+                <li>You closed the payment window</li>
+                <li>There was a technical issue with the payment process</li>
+            </ul>
+        </div>
+
+        <div class="help-info">
+            <h4>Need Help?</h4>
+            <p>If you encountered an issue during payment or need assistance completing your order, our support team is here to help.</p>
+        </div>
+
+        <div>
+            <a href="https://vetstay.click/checkout-payfast.html" class="btn btn-primary">Try Again</a>
+            <a href="https://vetstay.click/index.html" class="btn btn-secondary">Return to Home</a>
+        </div>
+
+        <div class="contact-info">
+            <p><strong>Contact Support:</strong></p>
+            <p>Email: support@vettedstay.com</p>
+            <p>Phone: 021 123 4567</p>
+            <p>Hours: Mon-Fri 9AM-5PM</p>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Log cancellation for analytics
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('custom_str1');
+        
+        if (orderId) {
+            console.log('Payment cancelled for order:', orderId);
+            // Could send cancellation event to analytics
+        }
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">/workspaces/vs/payment-cancelled.html
