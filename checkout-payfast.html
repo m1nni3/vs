@@ -428,10 +428,9 @@
             const tenantName = document.getElementById('tenant_name').value.trim();
             const tenantId = document.getElementById('tenant_id').value.trim();
             const propertyRef = document.getElementById('property_ref').value.trim();
-            const amount = (selectedPackage.price + 15).toFixed(2);
             
             // Set PayFast fields
-            document.getElementById('amount').value = amount;
+            document.getElementById('amount').value = (selectedPackage.price + 15).toFixed(2);
             document.getElementById('item_name').value = selectedPackage.name;
             document.getElementById('item_description').value = selectedPackage.desc;
             
@@ -448,37 +447,55 @@
             document.getElementById('custom_str4').value = propertyRef;
             document.getElementById('custom_str5').value = selectedPackage.name;
             
-            // Generate signature - MUST be in alphabetical order
-            const dataObj = {
-                'amount': amount,
+            // Generate signature in EXACT PayFast field order
+            const fieldOrder = [
+                'merchant_id',
+                'merchant_key',
+                'return_url',
+                'cancel_url',
+                'notify_url',
+                'name_first',
+                'name_last',
+                'email_address',
+                'cell_number',
+                'amount',
+                'item_name',
+                'item_description',
+                'custom_str1',
+                'custom_str2',
+                'custom_str3',
+                'custom_str4',
+                'custom_str5'
+            ];
+            
+            const data = {
+                'merchant_id': '33174215',
+                'merchant_key': 'fumjfmixr9gsc',
+                'return_url': 'https://vetstay.click/payment-success.html',
                 'cancel_url': 'https://vetstay.click/payment-cancelled.html',
+                'notify_url': 'https://vetstay.click/payment-notify.php',
+                'name_first': firstName,
+                'name_last': lastName,
+                'email_address': email,
                 'cell_number': phone,
+                'amount': document.getElementById('amount').value,
+                'item_name': selectedPackage.name,
+                'item_description': selectedPackage.desc,
                 'custom_str1': orderId,
                 'custom_str2': tenantName,
                 'custom_str3': tenantId,
                 'custom_str4': propertyRef,
-                'custom_str5': selectedPackage.name,
-                'email_address': email,
-                'item_description': selectedPackage.desc,
-                'item_name': selectedPackage.name,
-                'merchant_id': '33174215',
-                'merchant_key': 'fumjfmixr9gsc',
-                'name_first': firstName,
-                'name_last': lastName,
-                'notify_url': 'https://vetstay.click/payment-notify.php',
-                'return_url': 'https://vetstay.click/payment-success.html'
+                'custom_str5': selectedPackage.name
             };
             
-            // Build parameter string - exclude empty values
+            // Build signature string in correct order, excluding empty values
             let pfOutput = '';
-            const sortedKeys = Object.keys(dataObj).sort();
-            
-            for (const key of sortedKeys) {
-                const val = dataObj[key];
-                if (val !== '' && val !== null && val !== undefined) {
-                    pfOutput += key + '=' + encodeURIComponent(val.trim()).replace(/%20/g, '+') + '&';
+            fieldOrder.forEach(key => {
+                const val = data[key];
+                if (val && val.toString().trim() !== '') {
+                    pfOutput += key + '=' + encodeURIComponent(val.toString().trim()).replace(/%20/g, '+') + '&';
                 }
-            }
+            });
             
             // Remove trailing &
             pfOutput = pfOutput.slice(0, -1);
@@ -486,11 +503,12 @@
             // Add passphrase
             pfOutput += '&passphrase=' + encodeURIComponent(PASSPHRASE.trim()).replace(/%20/g, '+');
             
-            console.log('Signature string:', pfOutput);
-            
-            const signature = CryptoJS.MD5(pfOutput).toString();
+            // Generate MD5 hash (lowercase)
+            const signature = CryptoJS.MD5(pfOutput).toString().toLowerCase();
             document.getElementById('signature').value = signature;
             
+            // Debug log (remove in production)
+            console.log('Signature string:', pfOutput);
             console.log('Generated signature:', signature);
             
             // Submit to PayFast
