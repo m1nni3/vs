@@ -14,7 +14,7 @@ flush();
 // Configuration
 define('SANDBOX_MODE', false); // Set to false for production
 $pfHost = SANDBOX_MODE ? 'sandbox.payfast.co.za' : 'www.payfast.co.za';
-$pfPassphrase = 'jt7NOE43FZPn'; // Your passphrase - keep secure!
+$pfPassphrase = 'Quinnyboy3m1nni3'; // Your passphrase - keep secure!
 
 // Log file for debugging
 $logFile = __DIR__ . '/payfast-notifications.log';
@@ -92,13 +92,10 @@ function pfValidIP() {
     
     $validIps = array_unique($validIps);
     
-    if(!isset($_SERVER['HTTP_REFERER'])) {
-        return false;
-    }
+    // Check the actual remote IP address that made the request
+    $remoteIp = $_SERVER['REMOTE_ADDR'];
     
-    $referrerIp = gethostbyname(parse_url($_SERVER['HTTP_REFERER'])['host']);
-    
-    return in_array($referrerIp, $validIps, true);
+    return in_array($remoteIp, $validIps, true);
 }
 
 $check2 = pfValidIP();
