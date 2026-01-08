@@ -1,0 +1,277 @@
+╔══════════════════════════════════════════════════════════════════╗
+║              SSL CERTIFICATE QUICK START GUIDE                   ║
+║                     vetstay.click                                ║
+╚══════════════════════════════════════════════════════════════════╝
+
+✅ SSL CERTIFICATE READY FOR INSTALLATION
+
+WHAT YOU HAVE:
+─────────────────────────────────────────────────────────────────
+✓ Valid SSL certificate for vetstay.click and www.vetstay.click
+✓ Certificate Authority bundle (chain of trust)
+✓ Private key (keep this EXTREMELY secure!)
+✓ Complete installation guide with step-by-step instructions
+
+CERTIFICATE INFORMATION:
+─────────────────────────────────────────────────────────────────
+Domain:       vetstay.click (including www subdomain)
+Issuer:       ZeroSSL RSA Domain Secure Site CA
+Valid From:   January 8, 2026
+Valid Until:  April 8, 2026
+Duration:     90 days
+Type:         Domain Validation (DV)
+Encryption:   RSA 2048-bit
+
+FILES LOCATION: ssl/ directory
+─────────────────────────────────────────────────────────────────
+1. certificate.crt          → Your SSL certificate
+2. ca_bundle.crt           → Intermediate certificate
+3. private.key             → Private key (KEEP SECURE!)
+4. SSL_INSTALLATION_GUIDE.md → Complete instructions
+5. README.txt              → Quick reference
+
+🔒 CRITICAL SECURITY WARNINGS:
+─────────────────────────────────────────────────────────────────
+⚠️  The private.key file is EXTREMELY SENSITIVE!
+
+DO NOT:
+❌ Share it publicly
+❌ Commit to git/version control
+❌ Email it
+❌ Post it online
+❌ Leave permissions open
+
+DO:
+✅ Set permissions to 600 (chmod 600 private.key)
+✅ Keep on secure server only
+✅ Backup securely (encrypted)
+✅ Only web server should access it
+
+QUICK INSTALLATION (Choose One Method):
+─────────────────────────────────────────────────────────────────
+
+METHOD 1: cPanel (Easiest - Recommended for Most Users)
+────────────────────────────────────────────────────────
+1. Login to your hosting control panel
+2. Navigate to: Security → SSL/TLS → Manage SSL sites
+3. Select domain: vetstay.click
+4. Paste certificate.crt content into "Certificate (CRT)" field
+5. Paste private.key content into "Private Key (KEY)" field
+6. Paste ca_bundle.crt content into "Certificate Authority Bundle"
+7. Click "Install Certificate"
+8. Visit https://vetstay.click to verify
+
+METHOD 2: Apache Server (Command Line)
+────────────────────────────────────────
+# 1. Upload files to server
+scp ssl/* user@yourserver:/etc/ssl/vetstay/
+
+# 2. Set permissions
+sudo chmod 600 /etc/ssl/vetstay/private.key
+sudo chmod 644 /etc/ssl/vetstay/*.crt
+
+# 3. Edit Apache config (/etc/apache2/sites-available/vetstay-ssl.conf)
+SSLCertificateFile /etc/ssl/vetstay/certificate.crt
+SSLCertificateKeyFile /etc/ssl/vetstay/private.key
+SSLCertificateChainFile /etc/ssl/vetstay/ca_bundle.crt
+
+# 4. Enable SSL and restart
+sudo a2enmod ssl
+sudo a2ensite vetstay-ssl
+sudo systemctl restart apache2
+
+METHOD 3: Nginx Server (Command Line)
+───────────────────────────────────────
+# 1. Upload files and create combined cert
+cat certificate.crt ca_bundle.crt > fullchain.crt
+
+# 2. Set permissions
+sudo chmod 600 private.key
+sudo chmod 644 *.crt
+
+# 3. Edit Nginx config (/etc/nginx/sites-available/vetstay)
+ssl_certificate /etc/nginx/ssl/vetstay/fullchain.crt;
+ssl_certificate_key /etc/nginx/ssl/vetstay/private.key;
+
+# 4. Test and restart
+sudo nginx -t
+sudo systemctl restart nginx
+
+VERIFICATION CHECKLIST:
+─────────────────────────────────────────────────────────────────
+After installation, verify these:
+
+□ Visit https://vetstay.click - should load without warnings
+□ Check browser padlock icon - should be green/secure
+□ Click padlock → View certificate details
+  - Should show: vetstay.click
+  - Valid until: April 8, 2026
+  - Issued by: ZeroSSL
+□ Test www subdomain: https://www.vetstay.click
+□ Verify HTTP redirects: http://vetstay.click → https://
+□ SSL Labs test: https://www.ssllabs.com/ssltest/
+  - Enter: vetstay.click
+  - Target grade: A or A+
+□ No mixed content warnings
+□ Check mobile devices work
+
+PAYFAST INTEGRATION (CRITICAL!):
+─────────────────────────────────────────────────────────────────
+⚠️  PayFast REQUIRES HTTPS for production payments!
+
+After SSL is active, you MUST update these files:
+
+File: checkout-payfast.html
+Lines to change:
+  Line 227: return_url  → https://vetstay.click/payment-success.html
+  Line 228: cancel_url  → https://vetstay.click/payment-cancelled.html
+  Line 229: notify_url  → https://vetstay.click/payment-notify.php
+
+File: payment-notify.php
+  Line 12: Change SANDBOX_MODE to false (for production)
+
+Then test complete payment flow:
+□ Start checkout process
+□ Submit payment (use sandbox first!)
+□ Verify redirect to success page (HTTPS)
+□ Check ITN notification received
+□ Confirm email sent
+
+COMMON ISSUES & QUICK FIXES:
+─────────────────────────────────────────────────────────────────
+
+Issue: "Your connection is not private" error
+Fix: 
+  - Clear browser cache
+  - Verify ca_bundle.crt is installed
+  - Check certificate matches domain
+
+Issue: Mixed content warnings
+Fix:
+  - Update all HTTP links to HTTPS or relative URLs
+  - Check: Images, CSS, JavaScript, iframes
+  - Use browser console to find issues
+
+Issue: PayFast redirects fail
+Fix:
+  - Ensure all URLs in checkout-payfast.html use https://
+  - Test notify_url is accessible from internet
+  - Check firewall allows PayFast IPs
+
+Issue: Certificate chain incomplete
+Fix:
+  - Ensure ca_bundle.crt is properly installed
+  - For Nginx: verify fullchain.crt includes both certificates
+
+IMPORTANT DATES:
+─────────────────────────────────────────────────────────────────
+✅ January 8, 2026  - Certificate becomes valid
+📅 April 1, 2026    - ⚠️  START RENEWAL PROCESS
+📅 April 8, 2026    - ⚠️  CERTIFICATE EXPIRES
+
+Set calendar reminders NOW!
+
+RENEWAL OPTIONS:
+─────────────────────────────────────────────────────────────────
+
+Option 1: ZeroSSL Manual Renewal
+  - Login to ZeroSSL 90 days before expiry
+  - Click "Renew" on certificate
+  - Download new certificates
+  - Replace old files on server
+  
+Option 2: Let's Encrypt (Recommended - Auto-renewal!)
+  sudo certbot --apache -d vetstay.click -d www.vetstay.click
+  # Or for Nginx:
+  sudo certbot --nginx -d vetstay.click -d www.vetstay.click
+  # Auto-renewal configured automatically!
+
+SUPPORT RESOURCES:
+─────────────────────────────────────────────────────────────────
+Complete Guide:    ssl/SSL_INSTALLATION_GUIDE.md (428 lines)
+Quick Reference:   ssl/README.txt
+SSL Testing:       https://www.ssllabs.com/ssltest/
+Mixed Content:     https://www.whynopadlock.com/
+ZeroSSL Support:   support@zerossl.com
+Apache Docs:       https://httpd.apache.org/docs/2.4/ssl/
+Nginx Docs:        https://nginx.org/en/docs/http/configuring_https_servers.html
+
+SECURITY BEST PRACTICES:
+─────────────────────────────────────────────────────────────────
+1. Keep private.key secure (permissions 600)
+2. Never commit certificates to version control
+3. Use strong SSL protocols (TLSv1.2, TLSv1.3 only)
+4. Enable HSTS header (included in guide)
+5. Regular security testing (monthly SSL Labs scan)
+6. Monitor certificate expiration
+7. Keep server software updated
+8. Use firewall to restrict access
+
+YOUR ACTION ITEMS:
+─────────────────────────────────────────────────────────────────
+Priority 1 (Do Now):
+□ Read this guide completely
+□ Choose installation method
+□ Backup current server configuration
+□ Set file permissions (chmod 600 private.key)
+
+Priority 2 (Installation):
+□ Follow installation guide for your server type
+□ Upload certificate files securely
+□ Configure web server (Apache/Nginx/cPanel)
+□ Restart web server
+□ Verify HTTPS works
+
+Priority 3 (Testing):
+□ Test https://vetstay.click loads correctly
+□ Verify padlock shows green/secure
+□ Run SSL Labs test (aim for A+)
+□ Check HTTP → HTTPS redirect works
+□ Test on mobile devices
+
+Priority 4 (PayFast Integration):
+□ Update checkout-payfast.html URLs to HTTPS
+□ Update payment-notify.php settings
+□ Test complete payment flow in sandbox
+□ Verify ITN notifications work
+□ Test live with small transaction
+
+Priority 5 (Maintenance):
+□ Set calendar reminder for April 1, 2026
+□ Document installation in your records
+□ Plan renewal process
+□ Schedule monthly SSL Labs tests
+
+EMERGENCY CONTACTS:
+─────────────────────────────────────────────────────────────────
+Web Server Issues:    Your hosting support
+SSL Certificate:      support@zerossl.com
+PayFast Problems:     support@payfast.co.za
+VettedStay:          info@vetstay.click / +27 72 215 7269
+
+SUCCESS CRITERIA:
+─────────────────────────────────────────────────────────────────
+✓ https://vetstay.click loads without warnings
+✓ Green padlock in all browsers
+✓ SSL Labs grade A or A+
+✓ HTTP automatically redirects to HTTPS
+✓ PayFast payments work correctly
+✓ ITN notifications received
+✓ No mixed content errors
+✓ Works on mobile devices
+✓ Renewal reminder set
+
+CONGRATULATIONS!
+─────────────────────────────────────────────────────────────────
+You now have everything needed for a secure HTTPS website.
+Follow the installation guide and you'll have professional-grade
+security for VettedStay in no time!
+
+Need detailed instructions? Open: ssl/SSL_INSTALLATION_GUIDE.md
+
+───────────────────────────────────────────────────────────────────
+SSL Certificate Package Created: January 8, 2026
+Certificate Valid: January 8 - April 8, 2026 (90 days)
+Domain: vetstay.click (+ www.vetstay.click)
+Status: ✅ Ready for installation
+───────────────────────────────────────────────────────────────────

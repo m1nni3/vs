@@ -1,0 +1,38 @@
+{
+  "functions": {
+    "api/orders": {
+      "runtime": "nodejs18.x",
+      "handler": "orders.createOrder"
+    },
+    "api/payments": {
+      "runtime": "nodejs18.x", 
+      "handler": "orders.processPayment"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/index-ecommerce.html",
+      "type": 301
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}

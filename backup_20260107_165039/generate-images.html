@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VettedStay - Image Placeholder Generator</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: #f7fafc;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #5a6c7d;
+      margin-bottom: 2rem;
+    }
+    .instructions {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .instructions h2 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+    .instructions ol {
+      line-height: 1.8;
+    }
+    .instructions code {
+      background: #f7fafc;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .image-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .image-card h3 {
+      margin: 0 0 0.5rem 0;
+      color: #2c3e50;
+      font-size: 1rem;
+    }
+    .image-card p {
+      margin: 0 0 1rem 0;
+      color: #5a6c7d;
+      font-size: 0.9rem;
+    }
+    canvas {
+      width: 100%;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 2px solid #e2e8f0;
+    }
+    canvas:hover {
+      border-color: #7cb342;
+    }
+    .download-btn {
+      background: #7cb342;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .download-btn:hover {
+      background: #689f38;
+    }
+    .download-all {
+      background: #2e7d99;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 2rem auto;
+      display: block;
+    }
+    .download-all:hover {
+      background: #236d87;
+    }
+    .section-title {
+      background: #2e7d99;
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 2rem 0 1rem 0;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🖼️ VettedStay Image Placeholder Generator</h1>
+<p class="subtitle">Generate and download all placeholder images for your website</p>
+
+<div class="instructions">
+  <h2>📋 How to Use</h2>
+  <ol>
+    <li>Click <strong>"Download All Images"</strong> button below to get all 14 images at once (recommended)</li>
+    <li>Or click individual <strong>"Download"</strong> buttons to get specific images</li>
+    <li>Save downloaded images to your <code>Images/</code> folder</li>
+    <li>Update HTML files to use local images instead of placeholder URLs</li>
+  </ol>
+  <p><strong>Note:</strong> All images will have transparent backgrounds and are optimized for web use.</p>
+</div>
+
+<button class="download-all" onclick="downloadAllImages()">📦 Download All Images (14 files)</button>
+
+<div class="section-title">🎯 Hero Image (1)</div>
+<div class="image-grid" id="hero-images"></div>
+
+<div class="section-title">🏅 Trust Badges (4)</div>
+<div class="image-grid" id="badge-images"></div>
+
+<div class="section-title">🔧 Service Cards (9)</div>
+<div class="image-grid" id="service-images"></div>
+
+<script>
+// Image definitions
+const images = {
+  hero: [
+    { name: 'hero-dashboard.png', width: 600, height: 400, bg: '#667eea', text: 'Tenant Screening\nDashboard', filename: 'hero-dashboard.png' }
+  ],
+  badges: [
+    { name: 'icon-verified.png', width: 48, height: 48, bg: '#7cb342', text: '✓', filename: 'icon-verified.png' },
+    { name: 'icon-secure.png', width: 48, height: 48, bg: '#2e7d99', text: '🔒', filename: 'icon-secure.png' },
+    { name: 'icon-fast.png', width: 48, height: 48, bg: '#667eea', text: '⚡', filename: 'icon-fast.png' },
+    { name: 'icon-landlords.png', width: 48, height: 48, bg: '#7cb342', text: '👥', filename: 'icon-landlords.png' }
+  ],
+  services: [
+    { name: 'Identity Verification', width: 400, height: 180, bg: '#667eea', text: 'Identity\nVerification', filename: 'service-identity.png' },
+    { name: 'Home Affairs Check', width: 400, height: 180, bg: '#764ba2', text: 'Home Affairs\nCheck', filename: 'service-home-affairs.png' },
+    { name: 'Credit Profile', width: 400, height: 180, bg: '#f093fb', text: 'Credit\nProfile', filename: 'service-credit.png' },
+    { name: 'Detailed Report', width: 400, height: 180, bg: '#4facfe', text: 'Detailed\nReport', filename: 'service-detailed-report.png' },
+    { name: 'Rental History', width: 400, height: 180, bg: '#00f2fe', text: 'Rental\nHistory', filename: 'service-rental.png' },
+    { name: 'Employment Check', width: 400, height: 180, bg: '#43e97b', text: 'Employment\nCheck', filename: 'service-employment.png' },
+    { name: 'Income Assessment', width: 400, height: 180, bg: '#38f9d7', text: 'Income\nAssessment', filename: 'service-income.png' },
+    { name: 'Criminal Check', width: 400, height: 180, bg: '#fa709a', text: 'Criminal\nCheck', filename: 'service-criminal.png' },
+    { name: 'Fraud Screening', width: 400, height: 180, bg: '#fee140', text: 'Fraud\nScreening', filename: 'service-fraud.png', textColor: '#333333' }
+  ]
+};
+
+// Generate canvas and draw placeholder
+function createPlaceholder(config) {
+  const canvas = document.createElement('canvas');
+  canvas.width = config.width;
+  canvas.height = config.height;
+  const ctx = canvas.getContext('2d');
+  
+  // Background
+  ctx.fillStyle = config.bg;
+  ctx.fillRect(0, 0, config.width, config.height);
+  
+  // Text
+  ctx.fillStyle = config.textColor || '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  
+  // Font size based on canvas size
+  const fontSize = config.width > 100 ? Math.floor(config.width / 12) : 16;
+  ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+  
+  // Draw text (handle multi-line)
+  const lines = config.text.split('\n');
+  const lineHeight = fontSize * 1.3;
+  const startY = config.height / 2 - ((lines.length - 1) * lineHeight) / 2;
+  
+  lines.forEach((line, index) => {
+    ctx.fillText(line, config.width / 2, startY + (index * lineHeight));
+  });
+  
+  // Add subtle border
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(1, 1, config.width - 2, config.height - 2);
+  
+  return canvas;
+}
+
+// Create image card
+function createImageCard(config, containerId) {
+  const container = document.getElementById(containerId);
+  const card = document.createElement('div');
+  card.className = 'image-card';
+  
+  const title = document.createElement('h3');
+  title.textContent = config.name;
+  
+  const description = document.createElement('p');
+  description.textContent = `${config.width}x${config.height}px • ${config.filename}`;
+  
+  const canvas = createPlaceholder(config);
+  canvas.onclick = () => downloadImage(canvas, config.filename);
+  
+  const btn = document.createElement('button');
+  btn.className = 'download-btn';
+  btn.textContent = '⬇️ Download';
+  btn.onclick = () => downloadImage(canvas, config.filename);
+  
+  card.appendChild(title);
+  card.appendChild(description);
+  card.appendChild(canvas);
+  card.appendChild(btn);
+  container.appendChild(card);
+  
+  return canvas;
+}
+
+// Download single image
+function downloadImage(canvas, filename) {
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+// Download all images as zip (simplified - downloads individually)
+async function downloadAllImages() {
+  const allImages = [...images.hero, ...images.badges, ...images.services];
+  
+  for (let i = 0; i < allImages.length; i++) {
+    const config = allImages[i];
+    const canvas = createPlaceholder(config);
+    
+    // Delay between downloads to prevent browser blocking
+    await new Promise(resolve => {
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = config.filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        setTimeout(resolve, 300);
+      });
+    });
+  }
+  
+  alert(`✅ Downloaded all ${allImages.length} images! Check your Downloads folder.`);
+}
+
+// Initialize
+images.hero.forEach(img => createImageCard(img, 'hero-images'));
+images.badges.forEach(img => createImageCard(img, 'badge-images'));
+images.services.forEach(img => createImageCard(img, 'service-images'));
+</script>
+
+</body>
+</html>
